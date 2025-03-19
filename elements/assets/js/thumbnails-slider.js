@@ -79,11 +79,29 @@ document.addEventListener("DOMContentLoaded", function () {
             },
           },
         });
-      } else if (
-        thumbnailsPosition === "left" ||
-        thumbnailsPosition === "right"
-      ) {
-        // For vertical thumbnail sliders
+      } else if (thumbnailsPosition === "left") {
+        // For left vertical thumbnail sliders
+        Object.assign(thumbnailConfig, {
+          direction: "ttb",
+          height: `${
+            thumbnailsHeight * thumbnailsPerPage +
+            (thumbnailsPerPage - 1) * thumbnailsGap
+          }px`,
+          fixedWidth: thumbnailsWidth,
+          fixedHeight: thumbnailsHeight,
+          perPage: thumbnailsPerPage,
+          perMove: 1,
+          breakpoints: {
+            768: {
+              direction: "ltr", // Switch to horizontal on mobile
+              height: "auto",
+              fixedWidth: Math.max(60, thumbnailsWidth * 0.75),
+              fixedHeight: Math.max(40, thumbnailsHeight * 0.75),
+            },
+          },
+        });
+      } else if (thumbnailsPosition === "right") {
+        // For right vertical thumbnail sliders
         Object.assign(thumbnailConfig, {
           direction: "ttb",
           height: `${

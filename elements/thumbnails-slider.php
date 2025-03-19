@@ -442,70 +442,139 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         // Render element
         echo "<div {$this->render_attributes('_root')}>";
 
-        // Main slider
-        echo '<div id="main-slider" class="splide main-slider">';
-        echo '<div class="splide__track">';
-        echo '<ul class="splide__list">';
-        
-        foreach ($slides as $slide) {
-            echo '<li class="splide__slide">';
+        // Determine the order to render sliders based on position
+        if ($thumbnails_position === 'left') {
+            // For left position, render thumbnails first, then main slider
+            // Thumbnails slider
+            echo '<div id="thumbnail-slider" class="splide thumbnail-slider">';
+            echo '<div class="splide__track">';
+            echo '<ul class="splide__list">';
             
-            // Slide image
-            if (!empty($slide['image'])) {
-                $image_url = $slide['image']['url'];
-                $image_alt = !empty($slide['title']) ? $slide['title'] : 'Slide image';
-                echo '<img src="' . esc_url($image_url) . '" alt="' . esc_attr($image_alt) . '">';
-            } else {
-                // Placeholder
-                echo '<div class="placeholder-image"></div>';
-            }
-            
-            // Slide content overlay
-            if ($show_content_overlay && (!empty($slide['title']) || !empty($slide['description']))) {
-                echo '<div class="slide-content position-' . esc_attr($content_position) . '">';
+            foreach ($slides as $slide) {
+                echo '<li class="splide__slide">';
                 
-                if (!empty($slide['title'])) {
-                    echo '<h3 class="slide-title">' . esc_html($slide['title']) . '</h3>';
+                if (!empty($slide['image'])) {
+                    $image_url = $slide['image']['url'];
+                    $image_alt = !empty($slide['title']) ? $slide['title'] : 'Thumbnail image';
+                    echo '<img src="' . esc_url($image_url) . '" alt="' . esc_attr($image_alt) . '">';
+                } else {
+                    // Placeholder
+                    echo '<div class="placeholder-image"></div>';
                 }
                 
-                if (!empty($slide['description'])) {
-                    echo '<div class="slide-description">' . wp_kses_post($slide['description']) . '</div>';
+                echo '</li>';
+            }
+            
+            echo '</ul>';
+            echo '</div>';
+            echo '</div>';
+            
+            // Main slider
+            echo '<div id="main-slider" class="splide main-slider">';
+            echo '<div class="splide__track">';
+            echo '<ul class="splide__list">';
+            
+            foreach ($slides as $slide) {
+                echo '<li class="splide__slide">';
+                
+                // Slide image
+                if (!empty($slide['image'])) {
+                    $image_url = $slide['image']['url'];
+                    $image_alt = !empty($slide['title']) ? $slide['title'] : 'Slide image';
+                    echo '<img src="' . esc_url($image_url) . '" alt="' . esc_attr($image_alt) . '">';
+                } else {
+                    // Placeholder
+                    echo '<div class="placeholder-image"></div>';
                 }
                 
-                echo '</div>';
+                // Slide content overlay
+                if ($show_content_overlay && (!empty($slide['title']) || !empty($slide['description']))) {
+                    echo '<div class="slide-content position-' . esc_attr($content_position) . '">';
+                    
+                    if (!empty($slide['title'])) {
+                        echo '<h3 class="slide-title">' . esc_html($slide['title']) . '</h3>';
+                    }
+                    
+                    if (!empty($slide['description'])) {
+                        echo '<div class="slide-description">' . wp_kses_post($slide['description']) . '</div>';
+                    }
+                    
+                    echo '</div>';
+                }
+                
+                echo '</li>';
             }
             
-            echo '</li>';
-        }
-        
-        echo '</ul>';
-        echo '</div>';
-        echo '</div>';
-        
-        // Thumbnails slider
-        echo '<div id="thumbnail-slider" class="splide thumbnail-slider">';
-        echo '<div class="splide__track">';
-        echo '<ul class="splide__list">';
-        
-        foreach ($slides as $slide) {
-            echo '<li class="splide__slide">';
+            echo '</ul>';
+            echo '</div>';
+            echo '</div>';
+        } else {
+            // For bottom or right position, render main slider first, then thumbnails
+            // Main slider
+            echo '<div id="main-slider" class="splide main-slider">';
+            echo '<div class="splide__track">';
+            echo '<ul class="splide__list">';
             
-            if (!empty($slide['image'])) {
-                $image_url = $slide['image']['url'];
-                $image_alt = !empty($slide['title']) ? $slide['title'] : 'Thumbnail image';
-                echo '<img src="' . esc_url($image_url) . '" alt="' . esc_attr($image_alt) . '">';
-            } else {
-                // Placeholder
-                echo '<div class="placeholder-image"></div>';
+            foreach ($slides as $slide) {
+                echo '<li class="splide__slide">';
+                
+                // Slide image
+                if (!empty($slide['image'])) {
+                    $image_url = $slide['image']['url'];
+                    $image_alt = !empty($slide['title']) ? $slide['title'] : 'Slide image';
+                    echo '<img src="' . esc_url($image_url) . '" alt="' . esc_attr($image_alt) . '">';
+                } else {
+                    // Placeholder
+                    echo '<div class="placeholder-image"></div>';
+                }
+                
+                // Slide content overlay
+                if ($show_content_overlay && (!empty($slide['title']) || !empty($slide['description']))) {
+                    echo '<div class="slide-content position-' . esc_attr($content_position) . '">';
+                    
+                    if (!empty($slide['title'])) {
+                        echo '<h3 class="slide-title">' . esc_html($slide['title']) . '</h3>';
+                    }
+                    
+                    if (!empty($slide['description'])) {
+                        echo '<div class="slide-description">' . wp_kses_post($slide['description']) . '</div>';
+                    }
+                    
+                    echo '</div>';
+                }
+                
+                echo '</li>';
             }
             
-            echo '</li>';
+            echo '</ul>';
+            echo '</div>';
+            echo '</div>';
+            
+            // Thumbnails slider
+            echo '<div id="thumbnail-slider" class="splide thumbnail-slider">';
+            echo '<div class="splide__track">';
+            echo '<ul class="splide__list">';
+            
+            foreach ($slides as $slide) {
+                echo '<li class="splide__slide">';
+                
+                if (!empty($slide['image'])) {
+                    $image_url = $slide['image']['url'];
+                    $image_alt = !empty($slide['title']) ? $slide['title'] : 'Thumbnail image';
+                    echo '<img src="' . esc_url($image_url) . '" alt="' . esc_attr($image_alt) . '">';
+                } else {
+                    // Placeholder
+                    echo '<div class="placeholder-image"></div>';
+                }
+                
+                echo '</li>';
+            }
+            
+            echo '</ul>';
+            echo '</div>';
+            echo '</div>';
         }
-        
-        echo '</ul>';
-        echo '</div>';
-        echo '</div>';
-        
+
         echo '</div>'; // Close root element
     }
 
