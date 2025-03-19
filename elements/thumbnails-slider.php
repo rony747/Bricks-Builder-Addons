@@ -28,6 +28,17 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         return ['slider', 'thumbnails', 'gallery', 'carousel', 'images', 'splide'];
     }
 
+       // Enqueue element styles and scripts
+       public function enqueue_scripts() {
+		wp_enqueue_script( 'bricks-splide' );
+		wp_enqueue_style( 'bricks-splide' );
+        wp_enqueue_style('rony-thumbnails-slider-style', plugins_url('assets/css/thumbnails-slider.css', __FILE__), ['bricks-splide'], '1.0.0');
+        wp_enqueue_script('ronyThumbnailsSlider', plugins_url('assets/js/thumbnails-slider.js', __FILE__), ['bricks-splide'], '1.0.0', true);
+        wp_localize_script('ronyThumbnailsSlider', 'ronyThumbnailsSliderData', [
+            'thumbnailsArrows' => $this->settings['thumbnailsArrows'] ?? true,
+        ]);
+ 
+    }
     // Set builder control groups
     public function set_control_groups() {
         $this->control_groups['slides'] = [
@@ -456,6 +467,7 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
 
     // Render element HTML
     public function render() {
+        $root_classes[] = 'rony-thumbnails-slider-wrapper';
         $settings = $this->settings;
         $slides = !empty($settings['slides']) ? $settings['slides'] : [];
         
@@ -464,7 +476,7 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         }
 
         // Root element classes
-        $this->set_attribute('_root', 'class', 'rony-thumbnails-slider-wrapper');
+        $this->set_attribute('_root', 'class', $root_classes);
 
         // Main slider attributes
         $slider_type = !empty($settings['mainSliderType']) ? $settings['mainSliderType'] : 'fade';
@@ -514,7 +526,7 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         $this->set_attribute('_root', 'class', 'thumbnails-position-' . $thumbnails_position);
 
         // Render element
-        echo "<div {$this->render_attributes('_root')}>";
+        echo "<div {$this->render_attributes( '_root' )}>";
 
         // Determine the order to render sliders based on position
         if ($thumbnails_position === 'left') {
@@ -652,29 +664,5 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         echo '</div>'; // Close root element
     }
 
-    // Enqueue element styles and scripts
-    public function enqueue_scripts() {
-        // Splide CSS
-        wp_enqueue_style(
-            'splide', 
-            'https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css',
-            [],
-            '4.1.4'
-        );
-
-        // Splide JS
-        wp_enqueue_script(
-            'splide',
-            'https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js',
-            [],
-            '4.1.4',
-            true
-        );
-        wp_enqueue_style('rony-thumbnails-slider-style', plugins_url('assets/css/thumbnails-slider.css', __FILE__), ['splide'], '1.0.0');
-        wp_enqueue_script('ronyThumbnailsSlider', plugins_url('assets/js/thumbnails-slider.js', __FILE__), ['splide'], '1.0.0', true);
-        wp_localize_script('ronyThumbnailsSlider', 'ronyThumbnailsSliderData', [
-            'thumbnailsArrows' => $this->settings['thumbnailsArrows'] ?? true,
-        ]);
  
-    }
 } 
