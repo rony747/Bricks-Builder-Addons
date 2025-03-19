@@ -131,6 +131,38 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
             'required' => [['mainSliderAutoplay', '=', true]],
         ];
 
+        $this->controls['mainSliderArrowsIcons'] = [
+            'tab' => 'content',
+            'group' => 'main_slider',
+            'label' => esc_html__('Custom Arrow Icons', 'rony-bricks-builder-addons'),
+            'type' => 'separator',
+            'required' => [['mainSliderArrows', '=', true]],
+        ];
+
+        $this->controls['mainSliderPrevArrowIcon'] = [
+            'tab' => 'content',
+            'group' => 'main_slider',
+            'label' => esc_html__('Previous Arrow Icon', 'rony-bricks-builder-addons'),
+            'type' => 'icon',
+            'default' => [
+                'library' => 'ionicons',
+                'icon' => 'ion-chevron-left',
+            ],
+            'required' => [['mainSliderArrows', '=', true]],
+        ];
+
+        $this->controls['mainSliderNextArrowIcon'] = [
+            'tab' => 'content',
+            'group' => 'main_slider',
+            'label' => esc_html__('Next Arrow Icon', 'rony-bricks-builder-addons'),
+            'type' => 'icon',
+            'default' => [
+                'library' => 'ionicons',
+                'icon' => 'ion-chevron-right',
+            ],
+            'required' => [['mainSliderArrows', '=', true]],
+        ];
+
         $this->controls['mainSliderHeight'] = [
             'tab' => 'content',
             'group' => 'main_slider',
@@ -311,6 +343,38 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
             'default' => false,
         ];
 
+        $this->controls['thumbnailsArrowsIcons'] = [
+            'tab' => 'content',
+            'group' => 'thumbnails',
+            'label' => esc_html__('Custom Arrow Icons', 'rony-bricks-builder-addons'),
+            'type' => 'separator',
+            'required' => [['thumbnailsArrows', '=', true]],
+        ];
+
+        $this->controls['thumbnailsPrevArrowIcon'] = [
+            'tab' => 'content',
+            'group' => 'thumbnails',
+            'label' => esc_html__('Previous Arrow Icon', 'rony-bricks-builder-addons'),
+            'type' => 'icon',
+            'default' => [
+                'library' => 'ionicons',
+                'icon' => 'ion-chevron-left',
+            ],
+            'required' => [['thumbnailsArrows', '=', true]],
+        ];
+
+        $this->controls['thumbnailsNextArrowIcon'] = [
+            'tab' => 'content',
+            'group' => 'thumbnails',
+            'label' => esc_html__('Next Arrow Icon', 'rony-bricks-builder-addons'),
+            'type' => 'icon',
+            'default' => [
+                'library' => 'ionicons',
+                'icon' => 'ion-chevron-right',
+            ],
+            'required' => [['thumbnailsArrows', '=', true]],
+        ];
+
         $this->controls['thumbnailsPosition'] = [
             'tab' => 'content',
             'group' => 'thumbnails',
@@ -419,6 +483,12 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         $thumbnails_position = !empty($settings['thumbnailsPosition']) ? $settings['thumbnailsPosition'] : 'bottom';
         $vertical_thumbnails_width = !empty($settings['verticalThumbnailsWidth']) ? (int)$settings['verticalThumbnailsWidth'] : 120;
         
+        // Arrow icon settings
+        $main_prev_arrow_icon = !empty($settings['mainSliderPrevArrowIcon']) ? $this->render_icon($settings['mainSliderPrevArrowIcon'], ['echo' => false]) : '<i class="ion-chevron-left"></i>';
+        $main_next_arrow_icon = !empty($settings['mainSliderNextArrowIcon']) ? $this->render_icon($settings['mainSliderNextArrowIcon'], ['echo' => false]) : '<i class="ion-chevron-right"></i>';
+        $thumbnails_prev_arrow_icon = !empty($settings['thumbnailsPrevArrowIcon']) ? $this->render_icon($settings['thumbnailsPrevArrowIcon'], ['echo' => false]) : '<i class="ion-chevron-left"></i>';
+        $thumbnails_next_arrow_icon = !empty($settings['thumbnailsNextArrowIcon']) ? $this->render_icon($settings['thumbnailsNextArrowIcon'], ['echo' => false]) : '<i class="ion-chevron-right"></i>';
+        
         // Content overlay settings
         $show_content_overlay = !empty($settings['showContentOverlay']) ? true : false;
         $content_position = !empty($settings['contentPosition']) ? $settings['contentPosition'] : 'bottom-left';
@@ -437,6 +507,10 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         $this->set_attribute('_root', 'data-thumbnails-arrows', $thumbnails_arrows ? 'true' : 'false');
         $this->set_attribute('_root', 'data-thumbnails-position', $thumbnails_position);
         $this->set_attribute('_root', 'data-vertical-thumbnails-width', $vertical_thumbnails_width);
+        $this->set_attribute('_root', 'data-main-prev-arrow', htmlspecialchars($main_prev_arrow_icon, ENT_QUOTES, 'UTF-8'));
+        $this->set_attribute('_root', 'data-main-next-arrow', htmlspecialchars($main_next_arrow_icon, ENT_QUOTES, 'UTF-8'));
+        $this->set_attribute('_root', 'data-thumbnails-prev-arrow', htmlspecialchars($thumbnails_prev_arrow_icon, ENT_QUOTES, 'UTF-8'));
+        $this->set_attribute('_root', 'data-thumbnails-next-arrow', htmlspecialchars($thumbnails_next_arrow_icon, ENT_QUOTES, 'UTF-8'));
         $this->set_attribute('_root', 'class', 'thumbnails-position-' . $thumbnails_position);
 
         // Render element
@@ -583,17 +657,17 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         // Splide CSS
         wp_enqueue_style(
             'splide', 
-            'https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/css/splide.min.css',
+            'https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css',
             [],
-            '3.6.12'
+            '4.1.4'
         );
 
         // Splide JS
         wp_enqueue_script(
             'splide',
-            'https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js',
+            'https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js',
             [],
-            '3.6.12',
+            '4.1.4',
             true
         );
         wp_enqueue_style('rony-thumbnails-slider-style', plugins_url('assets/css/thumbnails-slider.css', __FILE__), ['splide'], '1.0.0');
