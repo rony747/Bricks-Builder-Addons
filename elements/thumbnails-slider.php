@@ -311,6 +311,35 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
             'default' => false,
         ];
 
+        $this->controls['thumbnailsPosition'] = [
+            'tab' => 'content',
+            'group' => 'thumbnails',
+            'label' => esc_html__('Thumbnails Position', 'rony-bricks-builder-addons'),
+            'type' => 'select',
+            'options' => [
+                'bottom' => esc_html__('Bottom', 'rony-bricks-builder-addons'),
+                'left' => esc_html__('Left', 'rony-bricks-builder-addons'),
+                'right' => esc_html__('Right', 'rony-bricks-builder-addons'),
+            ],
+            'default' => 'bottom',
+        ];
+
+        $this->controls['verticalThumbnailsWidth'] = [
+            'tab' => 'content',
+            'group' => 'thumbnails',
+            'label' => esc_html__('Vertical Thumbnails Width', 'rony-bricks-builder-addons'),
+            'type' => 'number',
+            'default' => 120,
+            'min' => 60,
+            'max' => 300,
+            'description' => esc_html__('Width of the thumbnails container when positioned left or right', 'rony-bricks-builder-addons'),
+            'required' => [[
+                'thumbnailsPosition', 
+                'in', 
+                ['left', 'right']
+            ]],
+        ];
+
         $this->controls['thumbnailsPadding'] = [
             'tab' => 'style',
             'label' => esc_html__('Thumbnails Padding', 'rony-bricks-builder-addons'),
@@ -387,6 +416,8 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         $thumbnails_height = !empty($settings['thumbnailsHeight']) ? (int)$settings['thumbnailsHeight'] : 60;
         $thumbnails_gap = !empty($settings['thumbnailsGap']) ? (int)$settings['thumbnailsGap'] : 10;
         $thumbnails_arrows = isset($settings['thumbnailsArrows']) ? (bool)$settings['thumbnailsArrows'] : false;
+        $thumbnails_position = !empty($settings['thumbnailsPosition']) ? $settings['thumbnailsPosition'] : 'bottom';
+        $vertical_thumbnails_width = !empty($settings['verticalThumbnailsWidth']) ? (int)$settings['verticalThumbnailsWidth'] : 120;
         
         // Content overlay settings
         $show_content_overlay = !empty($settings['showContentOverlay']) ? true : false;
@@ -404,6 +435,9 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         $this->set_attribute('_root', 'data-thumbnails-height', $thumbnails_height);
         $this->set_attribute('_root', 'data-thumbnails-gap', $thumbnails_gap);
         $this->set_attribute('_root', 'data-thumbnails-arrows', $thumbnails_arrows ? 'true' : 'false');
+        $this->set_attribute('_root', 'data-thumbnails-position', $thumbnails_position);
+        $this->set_attribute('_root', 'data-vertical-thumbnails-width', $vertical_thumbnails_width);
+        $this->set_attribute('_root', 'class', 'thumbnails-position-' . $thumbnails_position);
 
         // Render element
         echo "<div {$this->render_attributes('_root')}>";

@@ -23,6 +23,18 @@ document.addEventListener("DOMContentLoaded", function () {
       const thumbnailsGap = parseInt(sliderWrapper.dataset.thumbnailsGap) || 10;
       const thumbnailsArrows =
         sliderWrapper.dataset.thumbnailsArrows === "true";
+      const thumbnailsPosition =
+        sliderWrapper.dataset.thumbnailsPosition || "bottom";
+      const verticalThumbnailsWidth =
+        parseInt(sliderWrapper.dataset.verticalThumbnailsWidth) || 120;
+
+      // Set the CSS variable for vertical thumbnails width
+      if (thumbnailsPosition === "left" || thumbnailsPosition === "right") {
+        sliderWrapper.style.setProperty(
+          "--vertical-thumbnails-width",
+          `${verticalThumbnailsWidth}px`
+        );
+      }
 
       // Unique IDs for this slider instance
       const mainSliderId = `main-slider-${index}`;
@@ -42,25 +54,62 @@ document.addEventListener("DOMContentLoaded", function () {
         interval: autoplayInterval,
       });
 
-      // Initialize thumbnail slider
-      const thumbnailSlider = new Splide(`#${thumbnailSliderId}`, {
-        fixedWidth: thumbnailsWidth,
-        fixedHeight: thumbnailsHeight,
-        gap: thumbnailsGap,
+      // Configure thumbnail slider based on position
+      const thumbnailConfig = {
         rewind: true,
         pagination: false,
         arrows: thumbnailsArrows,
-        perPage: thumbnailsPerPage,
-        perMove: 1,
         isNavigation: true,
+        gap: thumbnailsGap,
         cover: true,
-        breakpoints: {
-          768: {
-            fixedWidth: Math.max(60, thumbnailsWidth * 0.75),
-            fixedHeight: Math.max(40, thumbnailsHeight * 0.75),
+      };
+
+      // Add position-specific settings
+      if (thumbnailsPosition === "bottom") {
+        Object.assign(thumbnailConfig, {
+          fixedWidth: thumbnailsWidth,
+          fixedHeight: thumbnailsHeight,
+          perPage: thumbnailsPerPage,
+          perMove: 1,
+          direction: "ltr",
+          breakpoints: {
+            768: {
+              fixedWidth: Math.max(60, thumbnailsWidth * 0.75),
+              fixedHeight: Math.max(40, thumbnailsHeight * 0.75),
+            },
           },
-        },
-      });
+        });
+      } else if (
+        thumbnailsPosition === "left" ||
+        thumbnailsPosition === "right"
+      ) {
+        // For vertical thumbnail sliders
+        Object.assign(thumbnailConfig, {
+          direction: "ttb",
+          height: `${
+            thumbnailsHeight * thumbnailsPerPage +
+            (thumbnailsPerPage - 1) * thumbnailsGap
+          }px`,
+          fixedWidth: thumbnailsWidth,
+          fixedHeight: thumbnailsHeight,
+          perPage: thumbnailsPerPage,
+          perMove: 1,
+          breakpoints: {
+            768: {
+              direction: "ltr", // Switch to horizontal on mobile
+              height: "auto",
+              fixedWidth: Math.max(60, thumbnailsWidth * 0.75),
+              fixedHeight: Math.max(40, thumbnailsHeight * 0.75),
+            },
+          },
+        });
+      }
+
+      // Initialize thumbnail slider with config
+      const thumbnailSlider = new Splide(
+        `#${thumbnailSliderId}`,
+        thumbnailConfig
+      );
 
       // Sync the sliders
       mainSlider.sync(thumbnailSlider);
