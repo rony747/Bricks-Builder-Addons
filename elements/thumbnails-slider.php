@@ -303,6 +303,14 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
             'default' => 10,
         ];
 
+        $this->controls['thumbnailsArrows'] = [
+            'tab' => 'content',
+            'group' => 'thumbnails',
+            'label' => esc_html__('Show Arrows', 'rony-bricks-builder-addons'),
+            'type' => 'checkbox',
+            'default' => false,
+        ];
+
         $this->controls['thumbnailsPadding'] = [
             'tab' => 'style',
             'label' => esc_html__('Thumbnails Padding', 'rony-bricks-builder-addons'),
@@ -378,6 +386,7 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         $thumbnails_width = !empty($settings['thumbnailsWidth']) ? (int)$settings['thumbnailsWidth'] : 100;
         $thumbnails_height = !empty($settings['thumbnailsHeight']) ? (int)$settings['thumbnailsHeight'] : 60;
         $thumbnails_gap = !empty($settings['thumbnailsGap']) ? (int)$settings['thumbnailsGap'] : 10;
+        $thumbnails_arrows = isset($settings['thumbnailsArrows']) ? (bool)$settings['thumbnailsArrows'] : false;
         
         // Content overlay settings
         $show_content_overlay = !empty($settings['showContentOverlay']) ? true : false;
@@ -394,6 +403,7 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         $this->set_attribute('_root', 'data-thumbnails-width', $thumbnails_width);
         $this->set_attribute('_root', 'data-thumbnails-height', $thumbnails_height);
         $this->set_attribute('_root', 'data-thumbnails-gap', $thumbnails_gap);
+        $this->set_attribute('_root', 'data-thumbnails-arrows', $thumbnails_arrows ? 'true' : 'false');
 
         // Render element
         echo "<div {$this->render_attributes('_root')}>";
@@ -483,209 +493,11 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
             '3.6.12',
             true
         );
-
-        // Custom CSS
-        $css = '
-            .rony-thumbnails-slider-wrapper {
-                margin-bottom: 20px;
-            }
-            
-            .rony-thumbnails-slider-wrapper .main-slider {
-                margin-bottom: 10px;
-            }
-            
-            .rony-thumbnails-slider-wrapper .splide__slide {
-                position: relative;
-                overflow: hidden;
-            }
-            
-            .rony-thumbnails-slider-wrapper .main-slider img {
-                width: 100%;
-                height: 100%;
-                display: block;
-            }
-            
-            .rony-thumbnails-slider-wrapper .thumbnail-slider .splide__slide {
-                opacity: 0.6;
-                transition: opacity 0.3s ease;
-                cursor: pointer;
-            }
-            
-            .rony-thumbnails-slider-wrapper .thumbnail-slider .splide__slide.is-active {
-                opacity: 1;
-            }
-            
-            .rony-thumbnails-slider-wrapper .thumbnail-slider .splide__slide img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                display: block;
-            }
-            
-            .rony-thumbnails-slider-wrapper .placeholder-image {
-                background-color: #f0f0f0;
-                width: 100%;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                min-height: 200px;
-            }
-            
-            .rony-thumbnails-slider-wrapper .placeholder-image::after {
-                content: "No Image";
-                color: #888;
-                font-size: 14px;
-            }
-            
-            .rony-thumbnails-slider-wrapper .thumbnail-slider .placeholder-image {
-                min-height: 60px;
-            }
-            
-            .rony-thumbnails-slider-wrapper .slide-content {
-                position: absolute;
-                color: #fff;
-                z-index: 2;
-            }
-            
-            .rony-thumbnails-slider-wrapper .slide-content.position-top-left {
-                top: 0;
-                left: 0;
-            }
-            
-            .rony-thumbnails-slider-wrapper .slide-content.position-top-center {
-                top: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                text-align: center;
-            }
-            
-            .rony-thumbnails-slider-wrapper .slide-content.position-top-right {
-                top: 0;
-                right: 0;
-                text-align: right;
-            }
-            
-            .rony-thumbnails-slider-wrapper .slide-content.position-center-left {
-                top: 50%;
-                left: 0;
-                transform: translateY(-50%);
-            }
-            
-            .rony-thumbnails-slider-wrapper .slide-content.position-center {
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                text-align: center;
-            }
-            
-            .rony-thumbnails-slider-wrapper .slide-content.position-center-right {
-                top: 50%;
-                right: 0;
-                transform: translateY(-50%);
-                text-align: right;
-            }
-            
-            .rony-thumbnails-slider-wrapper .slide-content.position-bottom-left {
-                bottom: 0;
-                left: 0;
-            }
-            
-            .rony-thumbnails-slider-wrapper .slide-content.position-bottom-center {
-                bottom: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                text-align: center;
-            }
-            
-            .rony-thumbnails-slider-wrapper .slide-content.position-bottom-right {
-                bottom: 0;
-                right: 0;
-                text-align: right;
-            }
-            
-            .rony-thumbnails-slider-wrapper .slide-title {
-                margin-top: 0;
-                margin-bottom: 8px;
-            }
-            
-            .rony-thumbnails-slider-wrapper .slide-description {
-                margin: 0;
-            }
-        ';
-
-        wp_register_style('rony-thumbnails-slider', false);
-        wp_enqueue_style('rony-thumbnails-slider');
-        wp_add_inline_style('rony-thumbnails-slider', $css);
-
-        // Custom JS
-        $js = '
-            document.addEventListener("DOMContentLoaded", function() {
-                const thumbnailsSliders = document.querySelectorAll(".rony-thumbnails-slider-wrapper");
-                
-                if (thumbnailsSliders.length > 0) {
-                    thumbnailsSliders.forEach(function(sliderWrapper, index) {
-                        // Get slider settings from data attributes
-                        const sliderType = sliderWrapper.dataset.sliderType || "fade";
-                        const showArrows = sliderWrapper.dataset.showArrows === "true";
-                        const showPagination = sliderWrapper.dataset.showPagination === "true";
-                        const autoplay = sliderWrapper.dataset.autoplay === "true";
-                        const autoplayInterval = parseInt(sliderWrapper.dataset.autoplayInterval) || 5000;
-                        const thumbnailsPerPage = parseInt(sliderWrapper.dataset.thumbnailsPerPage) || 5;
-                        const thumbnailsSpacing = parseInt(sliderWrapper.dataset.thumbnailsSpacing) || 10;
-                        const thumbnailsWidth = parseInt(sliderWrapper.dataset.thumbnailsWidth) || 100;
-                        const thumbnailsHeight = parseInt(sliderWrapper.dataset.thumbnailsHeight) || 60;
-                        const thumbnailsGap = parseInt(sliderWrapper.dataset.thumbnailsGap) || 10;
-                        
-                        // Unique IDs for this slider instance
-                        const mainSliderId = `main-slider-${index}`;
-                        const thumbnailSliderId = `thumbnail-slider-${index}`;
-                        
-                        // Update IDs
-                        sliderWrapper.querySelector(".main-slider").id = mainSliderId;
-                        sliderWrapper.querySelector(".thumbnail-slider").id = thumbnailSliderId;
-                        
-                        // Initialize main slider
-                        const mainSlider = new Splide(`#${mainSliderId}`, {
-                            type: sliderType,
-                            rewind: true,
-                            pagination: showPagination,
-                            arrows: showArrows,
-                            autoplay: autoplay,
-                            interval: autoplayInterval,
-                        });
-                        
-                        // Initialize thumbnail slider
-                        const thumbnailSlider = new Splide(`#${thumbnailSliderId}`, {
-                            fixedWidth: thumbnailsWidth,
-                            fixedHeight: thumbnailsHeight,
-                            gap: thumbnailsGap,
-                            rewind: true,
-                            pagination: false,
-                            arrows: true,
-                            perPage: thumbnailsPerPage,
-                            perMove: 1,
-                            isNavigation: true,
-                            cover: true,
-                            breakpoints: {
-                                768: {
-                                    fixedWidth: Math.max(60, thumbnailsWidth * 0.75),
-                                    fixedHeight: Math.max(40, thumbnailsHeight * 0.75),
-                                },
-                            },
-                        });
-                        
-                        // Sync the sliders
-                        mainSlider.sync(thumbnailSlider);
-                        
-                        // Mount the sliders
-                        mainSlider.mount();
-                        thumbnailSlider.mount();
-                    });
-                }
-            });
-        ';
-
-        wp_add_inline_script('splide', $js);
+        wp_enqueue_style('rony-thumbnails-slider-style', plugins_url('assets/css/thumbnails-slider.css', __FILE__), ['splide'], '1.0.0');
+        wp_enqueue_script('ronyThumbnailsSlider', plugins_url('assets/js/thumbnails-slider.js', __FILE__), ['splide'], '1.0.0', true);
+        wp_localize_script('ronyThumbnailsSlider', 'ronyThumbnailsSliderData', [
+            'thumbnailsArrows' => $this->settings['thumbnailsArrows'] ?? true,
+        ]);
+ 
     }
 } 
