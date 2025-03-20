@@ -30,15 +30,28 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
 
        // Enqueue element styles and scripts
        public function enqueue_scripts() {
-		wp_enqueue_script( 'bricks-splide' );
-		wp_enqueue_style( 'bricks-splide' );
-        wp_enqueue_style('rony-thumbnails-slider-style', plugins_url('assets/css/thumbnails-slider.css', __FILE__), ['bricks-splide'], '1.0.0');
-        wp_enqueue_script('ronyThumbnailsSlider', plugins_url('assets/js/thumbnails-slider.js', __FILE__), ['bricks-splide'], '1.0.0', true);
-        wp_localize_script('ronyThumbnailsSlider', 'ronyThumbnailsSliderData', [
-            'thumbnailsArrows' => $this->settings['thumbnailsArrows'] ?? true,
-        ]);
- 
+        wp_enqueue_script('bricks-splide');
+        wp_enqueue_style('bricks-splide');
+        
+        // Add version timestamp to force reload and prevent caching issues
+        $version = '1.0.2-' . time();
+        wp_enqueue_style('rony-thumbnails-slider-style', plugins_url('assets/css/thumbnails-slider.css', __FILE__), ['bricks-splide'], $version);
+        wp_enqueue_script('ronyThumbnailsSlider', plugins_url('assets/js/thumbnails-slider.js', __FILE__), ['bricks-splide'], $version, true);
     }
+
+    // Helper function to render arrow icon
+    private function get_arrow_icon($icon_settings, $default_icon) {
+        if (empty($icon_settings)) {
+            // Use SVG files as fallback instead of default icon class
+            $is_prev = strpos($default_icon, 'back') !== false || strpos($default_icon, 'left') !== false;
+            $svg_file = $is_prev ? 'arrow-left.svg' : 'arrow-right.svg';
+            $svg_path = plugins_url('assets/images/' . $svg_file, __FILE__);
+            return '<span class="arrow-svg-icon"><img src="' . esc_url($svg_path) . '" alt="Arrow"></span>';
+        }
+        
+        return '<span>' . $this->render_icon($icon_settings, ['echo' => false]) . '</span>';
+    }
+
     // Set builder control groups
     public function set_control_groups() {
         $this->control_groups['slides'] = [
@@ -496,11 +509,10 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         $vertical_thumbnails_width = !empty($settings['verticalThumbnailsWidth']) ? (int)$settings['verticalThumbnailsWidth'] : 120;
         
         // Arrow icon settings
-        $main_prev_arrow_icon = !empty($settings['mainSliderPrevArrowIcon']) ? '<span>'.$this->render_icon($settings['mainSliderPrevArrowIcon'], ['echo' => false]).'</span>' : '<span><i class="ion-ios-arrow-back"></i></span>';
-
-        $main_next_arrow_icon = !empty($settings['mainSliderNextArrowIcon']) ? '<span>'.$this->render_icon($settings['mainSliderNextArrowIcon'], ['echo' => false]).'</span>' : '<span><i class="ion-ios-arrow-forward"></i></span>';
-        $thumbnails_prev_arrow_icon = !empty($settings['thumbnailsPrevArrowIcon']) ? '<span>'.$this->render_icon($settings['thumbnailsPrevArrowIcon'], ['echo' => false]).'</span>' : '<span><i class="ion-ios-arrow-back"></i></span>';
-        $thumbnails_next_arrow_icon = !empty($settings['thumbnailsNextArrowIcon']) ? '<span>'.$this->render_icon($settings['thumbnailsNextArrowIcon'], ['echo' => false]).'</span>' : '<span><i class="ion-ios-arrow-forward"></i></span>';
+        $main_prev_arrow_icon = $this->get_arrow_icon($settings['mainSliderPrevArrowIcon'], 'ion-ios-arrow-back');
+        $main_next_arrow_icon = $this->get_arrow_icon($settings['mainSliderNextArrowIcon'], 'ion-ios-arrow-forward');
+        $thumbnails_prev_arrow_icon = $this->get_arrow_icon($settings['thumbnailsPrevArrowIcon'], 'ion-ios-arrow-back');
+        $thumbnails_next_arrow_icon = $this->get_arrow_icon($settings['thumbnailsNextArrowIcon'], 'ion-ios-arrow-forward');
         
         // Content overlay settings
         $show_content_overlay = !empty($settings['showContentOverlay']) ? true : false;
@@ -520,10 +532,6 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         $this->set_attribute('_root', 'data-thumbnails-arrows', $thumbnails_arrows ? 'true' : 'false');
         $this->set_attribute('_root', 'data-thumbnails-position', $thumbnails_position);
         $this->set_attribute('_root', 'data-vertical-thumbnails-width', $vertical_thumbnails_width);
-        $this->set_attribute('_root', 'data-main-prev-arrow', htmlspecialchars($main_prev_arrow_icon, ENT_QUOTES, 'UTF-8'));
-        $this->set_attribute('_root', 'data-main-next-arrow', htmlspecialchars($main_next_arrow_icon, ENT_QUOTES, 'UTF-8'));
-        $this->set_attribute('_root', 'data-thumbnails-prev-arrow', htmlspecialchars($thumbnails_prev_arrow_icon, ENT_QUOTES, 'UTF-8'));
-        $this->set_attribute('_root', 'data-thumbnails-next-arrow', htmlspecialchars($thumbnails_next_arrow_icon, ENT_QUOTES, 'UTF-8'));
         $this->set_attribute('_root', 'class', 'thumbnails-position-' . $thumbnails_position);
 
         // Render element
@@ -534,6 +542,15 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
             // For left position, render thumbnails first, then main slider
             // Thumbnails slider
             echo '<div id="thumbnail-slider" class="splide thumbnail-slider rony-thumbnail-slider">';
+            
+            // Custom thumbnails arrows
+            if ($thumbnails_arrows) {
+                echo '<div class="splide__arrows">';
+                echo '<button class="splide__arrow splide__arrow--prev">' . $thumbnails_prev_arrow_icon . '</button>';
+                echo '<button class="splide__arrow splide__arrow--next">' . $thumbnails_next_arrow_icon . '</button>';
+                echo '</div>';
+            }
+            
             echo '<div class="splide__track">';
             echo '<ul class="splide__list">';
             
@@ -558,6 +575,15 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
             
             // Main slider
             echo '<div id="main-slider" class="splide main-slider rony-main-slider">';
+            
+            // Custom main slider arrows
+            if ($show_arrows) {
+                echo '<div class="splide__arrows">';
+                echo '<button class="splide__arrow splide__arrow--prev">' . $main_prev_arrow_icon . '</button>';
+                echo '<button class="splide__arrow splide__arrow--next">' . $main_next_arrow_icon . '</button>';
+                echo '</div>';
+            }
+            
             echo '<div class="splide__track">';
             echo '<ul class="splide__list">';
             
@@ -599,6 +625,15 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
             // For bottom or right position, render main slider first, then thumbnails
             // Main slider
             echo '<div id="main-slider" class="splide main-slider rony-main-slider">';
+            
+            // Custom main slider arrows
+            if ($show_arrows) {
+                echo '<div class="splide__arrows">';
+                echo '<button class="splide__arrow splide__arrow--prev">' . $main_prev_arrow_icon . '</button>';
+                echo '<button class="splide__arrow splide__arrow--next">' . $main_next_arrow_icon . '</button>';
+                echo '</div>';
+            }
+            
             echo '<div class="splide__track">';
             echo '<ul class="splide__list">';
             
@@ -639,6 +674,15 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
             
             // Thumbnails slider
             echo '<div id="thumbnail-slider" class="splide thumbnail-slider rony-thumbnail-slider">';
+            
+            // Custom thumbnails arrows
+            if ($thumbnails_arrows) {
+                echo '<div class="splide__arrows">';
+                echo '<button class="splide__arrow splide__arrow--prev">' . $thumbnails_prev_arrow_icon . '</button>';
+                echo '<button class="splide__arrow splide__arrow--next">' . $thumbnails_next_arrow_icon . '</button>';
+                echo '</div>';
+            }
+
             echo '<div class="splide__track">';
             echo '<ul class="splide__list">';
             
