@@ -34,7 +34,7 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         wp_enqueue_style('bricks-splide');
         
         // Add version timestamp to force reload and prevent caching issues
-        $version = '1.0.2-' . time();
+        $version = '1.0.3-' . time();
         wp_enqueue_style('rony-thumbnails-slider-style', plugins_url('assets/css/thumbnails-slider.css', __FILE__), ['bricks-splide'], $version);
         wp_enqueue_script('ronyThumbnailsSlider', plugins_url('assets/js/thumbnails-slider.js', __FILE__), ['bricks-splide'], $version, true);
     }
@@ -185,6 +185,68 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
                 'icon' => 'ion-chevron-right',
             ],
             'required' => [['mainSliderArrows', '=', true]],
+        ];
+
+        // Arrow Color Settings
+        $this->controls['mainSliderArrowColors'] = [
+            'tab' => 'content',
+            'group' => 'main_slider',
+            'label' => esc_html__('Arrow Colors', 'rony-bricks-builder-addons'),
+            'type' => 'separator',
+            'required' => [['mainSliderArrows', '=', true]],
+        ];
+        
+        $this->controls['mainSliderArrowBgColor'] = [
+            'tab' => 'content',
+            'group' => 'main_slider',
+            'label' => esc_html__('Arrow Background', 'rony-bricks-builder-addons'),
+            'type' => 'color',
+    
+            'css' => [
+                [
+                    'property' => 'background',
+                    'selector' => '.rony-main-slider .splide__arrow',
+                ],
+            ],
+            'default' => 'rgba(0, 0, 0, 0.6)',
+            'required' => [['mainSliderArrows', '=', true]],
+        ];
+        
+        $this->controls['mainSliderArrowBgHoverColor'] = [
+            'tab' => 'content',
+            'group' => 'main_slider',
+            'label' => esc_html__('Arrow Background Hover', 'rony-bricks-builder-addons'),
+            'type' => 'color',
+            'css' => [
+                [
+                    'property' => 'background',
+                    'selector' => '.rony-main-slider .splide__arrow:hover',
+                ],
+            ],
+            'default' => 'rgba(0, 0, 0, 0.8)',
+            'required' => [['mainSliderArrows', '=', true]],
+        ];
+        
+        $this->controls['mainSliderArrowIconColor'] = [
+            'tab' => 'content',
+            'group' => 'main_slider',
+            'label' => esc_html__('Arrow Icon Color', 'rony-bricks-builder-addons'),
+            'type' => 'color',
+            'css' => [
+                [
+                    'property' => 'color',
+                    'selector' => '.rony-main-slider .splide__arrow span',
+                ],
+                [
+                    'property' => 'filter',
+                    'selector' => '.rony-main-slider .splide__arrow span.arrow-svg-icon img',
+                    'value' => 'brightness(0) invert(1)',
+ 
+                ],
+            ],
+            'default' => '#ffffff',
+            'required' => [['mainSliderArrows', '==', true]],
+             
         ];
 
         $this->controls['mainSliderHeight'] = [
@@ -396,6 +458,66 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
                 'library' => 'ionicons',
                 'icon' => 'ion-chevron-right',
             ],
+            'required' => [['thumbnailsArrows', '=', true]],
+        ];
+
+        // Thumbnail Arrow Color Settings
+        $this->controls['thumbnailsArrowColors'] = [
+            'tab' => 'content',
+            'group' => 'thumbnails',
+            'label' => esc_html__('Arrow Colors', 'rony-bricks-builder-addons'),
+            'type' => 'separator',
+            'required' => [['thumbnailsArrows', '=', true]],
+        ];
+        
+        $this->controls['thumbnailsArrowBgColor'] = [
+            'tab' => 'content',
+            'group' => 'thumbnails',
+            'label' => esc_html__('Arrow Background', 'rony-bricks-builder-addons'),
+            'type' => 'color',
+            'css' => [
+                [
+                    'property' => 'background',
+                    'selector' => '.rony-thumbnail-slider .splide__arrow',
+                ],
+            ],
+            'default' => 'rgba(0, 0, 0, 0.6)',
+            'required' => [['thumbnailsArrows', '=', true]],
+        ];
+        
+        $this->controls['thumbnailsArrowBgHoverColor'] = [
+            'tab' => 'content',
+            'group' => 'thumbnails',
+            'label' => esc_html__('Arrow Background Hover', 'rony-bricks-builder-addons'),
+            'type' => 'color',
+            'css' => [
+                [
+                    'property' => 'background',
+                    'selector' => '.rony-thumbnail-slider .splide__arrow:hover',
+                ],
+            ],
+            'default' => 'rgba(0, 0, 0, 0.8)',
+            'required' => [['thumbnailsArrows', '=', true]],
+        ];
+        
+        $this->controls['thumbnailsArrowIconColor'] = [
+            'tab' => 'content',
+            'group' => 'thumbnails',
+            'label' => esc_html__('Arrow Icon Color', 'rony-bricks-builder-addons'),
+            'type' => 'color',
+            'css' => [
+                [
+                    'property' => 'color',
+                    'selector' => '.rony-thumbnail-slider .splide__arrow span',
+                ],
+                [
+                    'property' => 'filter',
+                    'selector' => '.rony-thumbnail-slider .splide__arrow span.arrow-svg-icon img',
+                    'value' => 'brightness(0) invert(1)',
+                   
+                ],
+            ],
+            'default' => '#ffffff',
             'required' => [['thumbnailsArrows', '=', true]],
         ];
 
