@@ -496,10 +496,11 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         $vertical_thumbnails_width = !empty($settings['verticalThumbnailsWidth']) ? (int)$settings['verticalThumbnailsWidth'] : 120;
         
         // Arrow icon settings
-        $main_prev_arrow_icon = !empty($settings['mainSliderPrevArrowIcon']) ? $this->render_icon($settings['mainSliderPrevArrowIcon'], ['echo' => false]) : '<i class="ion-chevron-left"></i>';
-        $main_next_arrow_icon = !empty($settings['mainSliderNextArrowIcon']) ? $this->render_icon($settings['mainSliderNextArrowIcon'], ['echo' => false]) : '<i class="ion-chevron-right"></i>';
-        $thumbnails_prev_arrow_icon = !empty($settings['thumbnailsPrevArrowIcon']) ? $this->render_icon($settings['thumbnailsPrevArrowIcon'], ['echo' => false]) : '<i class="ion-chevron-left"></i>';
-        $thumbnails_next_arrow_icon = !empty($settings['thumbnailsNextArrowIcon']) ? $this->render_icon($settings['thumbnailsNextArrowIcon'], ['echo' => false]) : '<i class="ion-chevron-right"></i>';
+        $main_prev_arrow_icon = !empty($settings['mainSliderPrevArrowIcon']) ? '<span>'.$this->render_icon($settings['mainSliderPrevArrowIcon'], ['echo' => false]).'</span>' : '<span><i class="ion-ios-arrow-back"></i></span>';
+
+        $main_next_arrow_icon = !empty($settings['mainSliderNextArrowIcon']) ? '<span>'.$this->render_icon($settings['mainSliderNextArrowIcon'], ['echo' => false]).'</span>' : '<span><i class="ion-ios-arrow-forward"></i></span>';
+        $thumbnails_prev_arrow_icon = !empty($settings['thumbnailsPrevArrowIcon']) ? '<span>'.$this->render_icon($settings['thumbnailsPrevArrowIcon'], ['echo' => false]).'</span>' : '<span><i class="ion-ios-arrow-back"></i></span>';
+        $thumbnails_next_arrow_icon = !empty($settings['thumbnailsNextArrowIcon']) ? '<span>'.$this->render_icon($settings['thumbnailsNextArrowIcon'], ['echo' => false]).'</span>' : '<span><i class="ion-ios-arrow-forward"></i></span>';
         
         // Content overlay settings
         $show_content_overlay = !empty($settings['showContentOverlay']) ? true : false;
@@ -532,7 +533,7 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         if ($thumbnails_position === 'left') {
             // For left position, render thumbnails first, then main slider
             // Thumbnails slider
-            echo '<div id="thumbnail-slider" class="splide thumbnail-slider">';
+            echo '<div id="thumbnail-slider" class="splide thumbnail-slider rony-thumbnail-slider">';
             echo '<div class="splide__track">';
             echo '<ul class="splide__list">';
             
@@ -556,7 +557,7 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
             echo '</div>';
             
             // Main slider
-            echo '<div id="main-slider" class="splide main-slider">';
+            echo '<div id="main-slider" class="splide main-slider rony-main-slider">';
             echo '<div class="splide__track">';
             echo '<ul class="splide__list">';
             
@@ -597,7 +598,7 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
         } else {
             // For bottom or right position, render main slider first, then thumbnails
             // Main slider
-            echo '<div id="main-slider" class="splide main-slider">';
+            echo '<div id="main-slider" class="splide main-slider rony-main-slider">';
             echo '<div class="splide__track">';
             echo '<ul class="splide__list">';
             
@@ -637,7 +638,7 @@ class Rony_Bricks_Builder_Thumbnails_Slider extends \Bricks\Element {
             echo '</div>';
             
             // Thumbnails slider
-            echo '<div id="thumbnail-slider" class="splide thumbnail-slider">';
+            echo '<div id="thumbnail-slider" class="splide thumbnail-slider rony-thumbnail-slider">';
             echo '<div class="splide__track">';
             echo '<ul class="splide__list">';
             

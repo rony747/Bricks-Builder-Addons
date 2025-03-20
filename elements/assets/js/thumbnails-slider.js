@@ -9,19 +9,22 @@ document.addEventListener("DOMContentLoaded", function () {
       thumbnailsSliders.forEach(function (sliderWrapper) {
         const thumbnailsPosition =
           sliderWrapper.dataset.thumbnailsPosition || "bottom";
-        const verticalThumbnailsWidth =
-          parseInt(sliderWrapper.dataset.verticalThumbnailsWidth) || 120;
+        const verticalThumbnailsWidth = parseInt(
+          sliderWrapper.dataset.verticalThumbnailsWidth
+        );
 
         // Only adjust for left/right layouts on larger screens
         if (
           (thumbnailsPosition === "left" || thumbnailsPosition === "right") &&
           window.innerWidth >= 768
         ) {
-          const mainSliderElement = sliderWrapper.querySelector(".main-slider");
+          const mainSliderElement =
+            sliderWrapper.querySelector(".rony-main-slider");
           mainSliderElement.style.width = `calc(100% - ${verticalThumbnailsWidth}px - 10px)`;
         } else if (window.innerWidth < 768) {
           // Reset to full width on mobile
-          const mainSliderElement = sliderWrapper.querySelector(".main-slider");
+          const mainSliderElement =
+            sliderWrapper.querySelector(".rony-main-slider");
           mainSliderElement.style.width = "100%";
         }
       });
@@ -33,41 +36,32 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initialize sliders
     thumbnailsSliders.forEach(function (sliderWrapper, index) {
       // Get slider settings from data attributes
-      const sliderType = sliderWrapper.dataset.sliderType || "fade";
+      const sliderType = sliderWrapper.dataset.sliderType;
       const showArrows = sliderWrapper.dataset.showArrows === "true";
       const showPagination = sliderWrapper.dataset.showPagination === "true";
       const autoplay = sliderWrapper.dataset.autoplay === "true";
-      const autoplayInterval =
-        parseInt(sliderWrapper.dataset.autoplayInterval) || 5000;
-      const thumbnailsPerPage =
-        parseInt(sliderWrapper.dataset.thumbnailsPerPage) || 5;
-      const thumbnailsSpacing =
-        parseInt(sliderWrapper.dataset.thumbnailsSpacing) || 10;
-      const thumbnailsWidth =
-        parseInt(sliderWrapper.dataset.thumbnailsWidth) || 100;
-      const thumbnailsHeight =
-        parseInt(sliderWrapper.dataset.thumbnailsHeight) || 60;
-      const thumbnailsGap = parseInt(sliderWrapper.dataset.thumbnailsGap) || 10;
+      const autoplayInterval = parseInt(sliderWrapper.dataset.autoplayInterval);
+      const thumbnailsPerPage = parseInt(
+        sliderWrapper.dataset.thumbnailsPerPage
+      );
+      const thumbnailsSpacing = parseInt(
+        sliderWrapper.dataset.thumbnailsSpacing
+      );
+      const thumbnailsWidth = parseInt(sliderWrapper.dataset.thumbnailsWidth);
+      const thumbnailsHeight = parseInt(sliderWrapper.dataset.thumbnailsHeight);
+      const thumbnailsGap = parseInt(sliderWrapper.dataset.thumbnailsGap);
       const thumbnailsArrows =
         sliderWrapper.dataset.thumbnailsArrows === "true";
-      const thumbnailsPosition =
-        sliderWrapper.dataset.thumbnailsPosition || "bottom";
-      const verticalThumbnailsWidth =
-        parseInt(sliderWrapper.dataset.verticalThumbnailsWidth) || 120;
+      const thumbnailsPosition = sliderWrapper.dataset.thumbnailsPosition;
+      const verticalThumbnailsWidth = parseInt(
+        sliderWrapper.dataset.verticalThumbnailsWidth
+      );
 
       // Get custom arrow icons
-      const mainPrevArrow =
-        sliderWrapper.dataset.mainPrevArrow ||
-        '<i class="ion-chevron-left"></i>';
-      const mainNextArrow =
-        sliderWrapper.dataset.mainNextArrow ||
-        '<i class="ion-chevron-right"></i>';
-      const thumbnailsPrevArrow =
-        sliderWrapper.dataset.thumbnailsPrevArrow ||
-        '<i class="ion-chevron-left"></i>';
-      const thumbnailsNextArrow =
-        sliderWrapper.dataset.thumbnailsNextArrow ||
-        '<i class="ion-chevron-right"></i>';
+      const mainPrevArrow = sliderWrapper.dataset.mainPrevArrow;
+      const mainNextArrow = sliderWrapper.dataset.mainNextArrow;
+      const thumbnailsPrevArrow = sliderWrapper.dataset.thumbnailsPrevArrow;
+      const thumbnailsNextArrow = sliderWrapper.dataset.thumbnailsNextArrow;
 
       // Set width for main slider in left/right position layouts
       if (thumbnailsPosition === "left" || thumbnailsPosition === "right") {
@@ -79,18 +73,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Make sure main slider takes full remaining width
         if (window.innerWidth >= 768) {
-          const mainSliderElement = sliderWrapper.querySelector(".main-slider");
+          const mainSliderElement =
+            sliderWrapper.querySelector(".rony-main-slider");
           mainSliderElement.style.width = `calc(100% - ${verticalThumbnailsWidth}px - 10px)`;
         }
       }
 
       // Unique IDs for this slider instance
-      const mainSliderId = `main-slider-${index}`;
-      const thumbnailSliderId = `thumbnail-slider-${index}`;
+      const mainSliderId = `rony-main-slider-${index}`;
+      const thumbnailSliderId = `rony-thumbnail-slider-${index}`;
 
       // Update IDs
       sliderWrapper.querySelector(".main-slider").id = mainSliderId;
       sliderWrapper.querySelector(".thumbnail-slider").id = thumbnailSliderId;
+
+      // Update classes
+      sliderWrapper
+        .querySelector(".main-slider")
+        .classList.add("rony-main-slider");
+      sliderWrapper
+        .querySelector(".thumbnail-slider")
+        .classList.add("rony-thumbnail-slider");
 
       // Initialize main slider
       const mainSlider = new Splide(`#${mainSliderId}`, {
@@ -102,9 +105,9 @@ document.addEventListener("DOMContentLoaded", function () {
         interval: autoplayInterval,
         // Custom arrows
         classes: {
-          arrows: "splide__arrows main-slider-arrows",
-          prev: "splide__arrow--prev main-slider-prev",
-          next: "splide__arrow--next main-slider-next",
+          arrows: "splide__arrows rony-main-slider-arrows",
+          prev: "splide__arrow--prev rony-main-slider-prev",
+          next: "splide__arrow--next rony-main-slider-next",
         },
       });
 
@@ -112,8 +115,12 @@ document.addEventListener("DOMContentLoaded", function () {
       if (showArrows) {
         // After initialization, customize the arrows
         mainSlider.on("mounted", function () {
-          const prevArrow = sliderWrapper.querySelector(".main-slider-prev");
-          const nextArrow = sliderWrapper.querySelector(".main-slider-next");
+          const prevArrow = sliderWrapper.querySelector(
+            ".rony-main-slider-prev"
+          );
+          const nextArrow = sliderWrapper.querySelector(
+            ".rony-main-slider-next"
+          );
 
           if (prevArrow) {
             prevArrow.innerHTML = mainPrevArrow;
@@ -135,9 +142,9 @@ document.addEventListener("DOMContentLoaded", function () {
         cover: true,
         // Custom arrows
         classes: {
-          arrows: "splide__arrows thumbnail-slider-arrows",
-          prev: "splide__arrow--prev thumbnail-slider-prev",
-          next: "splide__arrow--next thumbnail-slider-next",
+          arrows: "splide__arrows rony-thumbnail-slider-arrows",
+          prev: "splide__arrow--prev rony-thumbnail-slider-prev",
+          next: "splide__arrow--next rony-thumbnail-slider-next",
         },
       };
 
@@ -211,10 +218,10 @@ document.addEventListener("DOMContentLoaded", function () {
         // After initialization, customize the arrows
         thumbnailSlider.on("mounted", function () {
           const prevArrow = sliderWrapper.querySelector(
-            ".thumbnail-slider-prev"
+            ".rony-thumbnail-slider-prev"
           );
           const nextArrow = sliderWrapper.querySelector(
-            ".thumbnail-slider-next"
+            ".rony-thumbnail-slider-next"
           );
 
           if (prevArrow) {
