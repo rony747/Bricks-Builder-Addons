@@ -80,3 +80,26 @@ function run_rony_bricks_builder_addons() {
 
 }
 run_rony_bricks_builder_addons();
+
+// Add debug output for element registration
+add_action('admin_notices', function() {
+    if (current_user_can('administrator')) {
+        if (!class_exists('Bricks\Elements')) {
+            echo '<div class="notice notice-error"><p>Bricks Builder is not active. Please activate Bricks Builder to use this plugin\'s elements.</p></div>';
+            return;
+        }
+        
+        // Get element settings
+        $element_settings = get_option('rony_bricks_addons_elements', array(
+            'thumbnails-slider' => true,
+            'dynamic-thumbnails-slider' => true,
+        ));
+        
+        // Only show ACF notice if the dynamic thumbnails slider is enabled in settings
+        if (!function_exists('get_field') && !class_exists('ACF') && 
+            isset($element_settings['dynamic-thumbnails-slider']) && 
+            $element_settings['dynamic-thumbnails-slider'] === true) {
+            echo '<div class="notice notice-warning"><p>Advanced Custom Fields (ACF) is not active. The Dynamic Thumbnails Slider will not be available until ACF is activated.</p></div>';
+        }
+    }
+});
